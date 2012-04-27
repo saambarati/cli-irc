@@ -1,0 +1,7 @@
+{
+    "name" : "cli-irc"
+    , "description" : "A simple command line interface for irc"
+    , "version" : "0.1.0"
+    , "author" : "Saam Barati"
+    , "engines" : { "node" : ">=0.6.11" }
+}

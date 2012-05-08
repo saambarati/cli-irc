@@ -71,9 +71,7 @@ function Client(server, nick, opt) {
     }
 
     self.addListener("raw", function (message) { // {{{
-        debugger
-        //INSERTED BY SAAM
-        //console.log(JSON.stringify(message))
+        debugger;
         switch ( message.command ) {
             case "001":
                 // Set nick to whatever the server decided it really is
@@ -432,6 +430,7 @@ function Client(server, nick, opt) {
                 break;
             default:
                 if ( message.commandType == 'error' ) {
+                    console.log('error=> ' + JSON.stringify(message))
                     self.emit('error', message);
                     if ( self.opt.showErrors )
                         util.log("\033[01;31mERROR: " + util.inspect(message) + "\033[0m");
@@ -539,14 +538,10 @@ Client.prototype.connect = function ( retryCount, callback ) { // {{{
     });
     var buffer = '';
     self.conn.addListener("data", function (chunk) {
-        debugger
         buffer += chunk;
-        //INSETED BY SAAM 
-        //console.log(buffer)
         var lines = buffer.split("\r\n");
         buffer = lines.pop();
         lines.forEach(function (line) {
-            debugger
             var message = parseMessage(line, self.opt.stripColors);
             try {
                 self.emit('raw', message);
@@ -760,12 +755,10 @@ function parseMessage(line, stripColors) { // {{{
     if ( match = line.match(/^:([^ ]+) +/) ) {
         message.prefix = match[1];
         line = line.replace(/^:[^ ]+ +/, '');
-        //find host name etc.
-        // an example: saamyjoon!~nodebot@cpe-76-90-2-101.socal.res.rr.com JOIN #Node.js
         if ( match = message.prefix.match(/^([_a-zA-Z0-9\[\]\\`^{}|-]*)(!([^@]+)@(.*))?$/) ) {
-           message.nick = match[1];
-           message.user = match[3];
-           message.host = match[4];
+            message.nick = match[1];
+            message.user = match[3];
+            message.host = match[4];
         }
         else {
             message.server = message.prefix;
